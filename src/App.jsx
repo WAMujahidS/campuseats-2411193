@@ -1,10 +1,44 @@
-import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router'
+import CartProvider from './context/CartProvider.jsx'
+import Layout from './components/Layout.jsx'
+
+import HomePage from './pages/HomePage.jsx'
+import VendorPage from './pages/VendorPage.jsx'
+import CartPage from './pages/CartPage.jsx'
+import OrdersPage from './pages/OrdersPage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
+
+
+/*
+week3
+port { useEffect, useState } from 'react'
 import { Loading, ErrorMessage } from './components/Status.jsx'
 import Header from './components/Header.jsx'
 import VendorCard from './components/VendorCard.jsx'
 import MenuList from './components/MenuList.jsx'
-import Footer from './components/Footer.jsx'
-import CartPage from './components/CartPage.jsx'
+import Footer from './components/Footer.jsx'*/
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <CartProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="vendor/:id" element={<VendorPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </CartProvider>
+    </BrowserRouter>
+  )
+}
+export default App
+/*
+week3
 function App() {
  const [vendors, setVendors] = useState([])
  const [loading, setLoading] = useState(true)
@@ -199,4 +233,4 @@ const cartCount = cart.reduce(
   </>
 )
 }
-export default App
+export default App*/

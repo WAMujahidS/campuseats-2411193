@@ -15,7 +15,8 @@ first.</p>
  <div className="card">
  <ul className="cart-list">
  {cart.map((line) => (
- <CartItem key={line.item.id} line={line} onChangeQty={onChangeQty} onRemove={onRemove} />
+  //  
+ <CartItem key={line.item.id} line={line} />
  ))}
  </ul>
  <p className="cart-total">Total: RM {total.toFixed(2)}</p>
