@@ -2,9 +2,10 @@
 import { Loading, ErrorMessage } from '../components/Status.jsx'
 import VendorCard from '../components/VendorCard.jsx'
 import { useVendors } from '../hooks/useVendors.js'
-
+import { useNavigate } from 'react-router'
 export default function HomePage() {
   const { vendors, loading, error, reload } = useVendors()
+  const navigate = useNavigate()
 
   if (loading) return <Loading />
 
@@ -18,7 +19,7 @@ export default function HomePage() {
 
       <div className="vendor-grid">
         {vendors.map((vendor) => (
-          <VendorCard key={vendor.id} vendor={vendor} />
+          <VendorCard key={vendor.id} vendor={vendor} onSelect={(id) => navigate(`/vendor/${id}`)} />
         ))}
       </div>
     </section>
