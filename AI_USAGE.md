@@ -16,7 +16,7 @@
 - One thing the AI got wrong and how I fixed it: The button that i prompt is not looks like that.
 ## Week 4
 - Tool(s):ChatGPT
-- What I asked for: step by step and explain,Help to fix personal feature
+- What I asked for: step by step and explain,Help to fix personal feature and fix the closed vendors problems
 - What I kept, changed or rejected, and why: AI suggest to use react-router-dom
-but I reject it. Also because this lab doesn't have any code I asked the AI to explain each code.
+but I reject it. Also because this lab doesn't have any code I asked the AI to explain each code. AI also suggest to change all of the VendorCard.jsx but I reject it. I only kept the funcion where if the vendor is closed, the cursor cannot click on it.
 - One thing the AI got wrong and how I fixed it: The hooks doesn't work and the AI suggest use react-router-dom. Also because I made the favourite feature in week 3, it doesn't integrate with the hooks.

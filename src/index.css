@@ -655,3 +655,8 @@ a.card:hover {
   margin-bottom: 1rem;
   padding: 0.55rem 1rem;
 }
+
+.vendor-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
