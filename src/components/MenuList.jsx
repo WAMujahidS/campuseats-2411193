@@ -1,21 +1,13 @@
-
 import MenuItemCard from './MenuItemCard.jsx'
 //  
 import { useCart } from '../hooks/useCart.js'
 import { useState } from 'react'
-/*
-week3
-function MenuList({items})({
-  items,
-  onAdd,
-  favourites = [],
-  onToggleFavourite,
-  favouritesOnly = false,
-  onToggleFavouritesOnly
-}) {*/
+//
+
 function MenuList({ items }) {
   const { favourites, toggleFavourite, addToCart } = useCart()
   const [favouritesOnly, setFavouritesOnly] = useState(false)
+
   // Filter the menu to show only favourite items when enabled.
   const displayedItems = favouritesOnly
     ? items.filter((item) => favourites.includes(item.id))
@@ -72,7 +64,7 @@ function MenuList({ items }) {
             >
               {favourites.includes(item.id) ? '♥' : '♡'}
             </button>
-            
+
             <MenuItemCard item={item} onAdd={addToCart} />
           </div>
         ))}

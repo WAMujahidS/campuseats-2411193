@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 
 const MAHALLAHS = [
@@ -84,7 +83,9 @@ function CheckoutForm({ onPlaceOrder }) {
       >
         <option value="">Select…</option>
         {MAHALLAHS.map((m) => (
-          <option key={m} value={m}>{m}</option>
+          <option key={m} value={m}>
+            {m}
+          </option>
         ))}
       </select>
 
@@ -106,7 +107,9 @@ function CheckoutForm({ onPlaceOrder }) {
         <p className="field-error">{errors.pickupTime}</p>
       )}
 
-      <button type="submit" className="btn">Place order</button>
+      <button type="submit" className="btn">
+        Place order
+      </button>
     </form>
   )
 }

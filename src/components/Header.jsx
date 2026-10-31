@@ -12,11 +12,17 @@ export default function Header() {
       </Link>
 
       <nav className="nav">
-        <NavLink to="/" end>Vendors</NavLink>
+        <NavLink to="/" end>
+          Vendors
+        </NavLink>
+
         <NavLink to="/cart">
           Cart <span className="badge">{count}</span>
         </NavLink>
-        <NavLink to="/orders">Orders</NavLink>
+
+        <NavLink to="/orders">
+          Orders
+        </NavLink>
       </nav>
     </header>
   )
