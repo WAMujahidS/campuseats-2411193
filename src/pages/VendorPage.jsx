@@ -35,7 +35,7 @@ function VendorPage() {
 
       <p className="muted">{vendor.location}</p>
 
-      <MenuList items={vendor.menu ?? []} />
+      <MenuList items={vendor.menu ?? []} vendorId={vendor.id} />
     </section>
   )
 }

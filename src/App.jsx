@@ -7,6 +7,7 @@ import VendorPage from './pages/VendorPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import OrdersPage from './pages/OrdersPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import FavouritePage from './pages/FavouritePage.jsx'
 
 //
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="vendor/:id" element={<VendorPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="orders" element={<OrdersPage />} />
+            <Route path="favourites" element={<FavouritePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

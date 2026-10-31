@@ -23,6 +23,10 @@ export default function Header() {
         <NavLink to="/orders">
           Orders
         </NavLink>
+
+        <NavLink to="/favourites">
+          Favourites
+        </NavLink>
       </nav>
     </header>
   )

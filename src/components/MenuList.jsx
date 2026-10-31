@@ -4,13 +4,15 @@ import { useCart } from '../hooks/useCart.js'
 import { useState } from 'react'
 //
 
-function MenuList({ items }) {
+function MenuList({ items, vendorId }) {
   const { favourites, toggleFavourite, addToCart } = useCart()
   const [favouritesOnly, setFavouritesOnly] = useState(false)
 
   // Filter the menu to show only favourite items when enabled.
   const displayedItems = favouritesOnly
-    ? items.filter((item) => favourites.includes(item.id))
+    ? items.filter((item) =>
+        favourites.some((fav) => fav.itemId === item.id)
+      )
     : items
 
   // Show a message if the current list has no items.
@@ -52,17 +54,17 @@ function MenuList({ items }) {
             <button
               type="button"
               className={`favourite-love ${
-                favourites.includes(item.id) ? 'is-favourite' : ''
+                favourites.some((fav) => fav.itemId === item.id) ? 'is-favourite' : ''
               }`}
               aria-label={
-                favourites.includes(item.id)
+                favourites.some((fav) => fav.itemId === item.id)
                   ? `Remove ${item.name} from favourites`
                   : `Add ${item.name} to favourites`
               }
-              aria-pressed={favourites.includes(item.id)}
-              onClick={() => toggleFavourite(item.id)}
+              aria-pressed={favourites.some((fav) => fav.itemId === item.id)}
+              onClick={() => toggleFavourite(item.id, vendorId)}
             >
-              {favourites.includes(item.id) ? '♥' : '♡'}
+              {favourites.some((fav) => fav.itemId === item.id) ? '♥' : '♡'}
             </button>
 
             <MenuItemCard item={item} onAdd={addToCart} />

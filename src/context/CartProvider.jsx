@@ -57,12 +57,20 @@ export default function CartProvider({ children }) {
     )
   }
 
-  function toggleFavourite(itemId) {
-    setFavourites((previous) =>
-      previous.includes(itemId)
-        ? previous.filter((id) => id !== itemId)
-        : [...previous, itemId]
-    )
+  function toggleFavourite(itemId, vendorId) {
+    setFavourites((previous) => {
+      const existing = previous.find(
+        (item) => item.itemId === itemId
+      )
+
+      if (existing) {
+        return previous.filter(
+          (item) => item.itemId !== itemId
+        )
+      }
+
+      return [...previous, { itemId, vendorId }]
+    })
   }
 
   function placeOrder(details) {
