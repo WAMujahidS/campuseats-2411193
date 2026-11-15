@@ -1,17 +1,24 @@
+
 import MenuItemCard from './MenuItemCard.jsx'
 //  
 import { useCart } from '../hooks/useCart.js'
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router'
+import { useAuth } from '../hooks/useAuth.js'
 //
 
 function MenuList({ items, vendorId }) {
   const { favourites, toggleFavourite, addToCart } = useCart()
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const [favouritesOnly, setFavouritesOnly] = useState(false)
 
   // Filter the menu to show only favourite items when enabled.
   const displayedItems = favouritesOnly
     ? items.filter((item) =>
-        favourites.some((fav) => fav.itemId === item.id)
+        favourites.some(
+          (fav) => fav.itemId === item.id && fav.vendorId === vendorId
+        )
       )
     : items
 
@@ -22,7 +29,13 @@ function MenuList({ items, vendorId }) {
         <button
           type="button"
           className="btn"
-          onClick={() => setFavouritesOnly((previous) => !previous)}
+          onClick={() => {
+            if (!user) {
+              navigate('/login')
+              return
+            }
+            setFavouritesOnly((previous) => !previous)
+          }}
         >
           {favouritesOnly ? 'Show All Items' : 'Favourites Only'}
         </button>
@@ -42,7 +55,13 @@ function MenuList({ items, vendorId }) {
       <button
         type="button"
         className="btn favourite-filter"
-        onClick={() => setFavouritesOnly((previous) => !previous)}
+        onClick={() => {
+          if (!user) {
+            navigate('/login')
+            return
+          }
+          setFavouritesOnly((previous) => !previous)
+        }}
       >
         {favouritesOnly ? 'Show All Items' : 'Favourites Only'}
       </button>
@@ -51,21 +70,43 @@ function MenuList({ items, vendorId }) {
         {displayedItems.map((item) => (
           <div className="menu-item-wrapper" key={item.id}>
             {/* Add or remove this item from favourites. */}
-            <button
-              type="button"
-              className={`favourite-love ${
-                favourites.some((fav) => fav.itemId === item.id) ? 'is-favourite' : ''
-              }`}
-              aria-label={
-                favourites.some((fav) => fav.itemId === item.id)
-                  ? `Remove ${item.name} from favourites`
-                  : `Add ${item.name} to favourites`
-              }
-              aria-pressed={favourites.some((fav) => fav.itemId === item.id)}
-              onClick={() => toggleFavourite(item.id, vendorId)}
-            >
-              {favourites.some((fav) => fav.itemId === item.id) ? '♥' : '♡'}
-            </button>
+            {user ? (
+              <button
+                type="button"
+                className={`favourite-love ${
+                  favourites.some(
+                    (fav) =>
+                      fav.itemId === item.id && fav.vendorId === vendorId
+                  )
+                    ? 'is-favourite'
+                    : ''
+                }`}
+                aria-label={
+                  favourites.some(
+                    (fav) =>
+                      fav.itemId === item.id && fav.vendorId === vendorId
+                  )
+                    ? `Remove ${item.name} from favourites`
+                    : `Add ${item.name} to favourites`
+                }
+                aria-pressed={favourites.some(
+                  (fav) =>
+                    fav.itemId === item.id && fav.vendorId === vendorId
+                )}
+                onClick={() => toggleFavourite(item.id, vendorId)}
+              >
+                {favourites.some(
+                  (fav) =>
+                    fav.itemId === item.id && fav.vendorId === vendorId
+                )
+                  ? '♥'
+                  : '♡'}
+              </button>
+            ) : (
+              <p className="muted">
+                <Link to="/login">Log in to save favourites</Link>
+              </p>
+            )}
 
             <MenuItemCard item={item} onAdd={addToCart} />
           </div>

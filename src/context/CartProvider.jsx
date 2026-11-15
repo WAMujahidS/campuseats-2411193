@@ -2,12 +2,23 @@
 import { useMemo } from 'react'
 import { CartContext } from './cart-context.js'
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
+import { useAuth } from '../hooks/useAuth.js'
 
 export default function CartProvider({ children }) {
-  const [cart, setCart] = useLocalStorage('campuseats-cart', [])
-  const [orders, setOrders] = useLocalStorage('campuseats-orders', [])
+  const { user } = useAuth()
+
+  const [cart, setCart] = useLocalStorage(
+    user ? `ce-cart-${user.uid}` : null,
+    []
+  )
+
+  const [orders, setOrders] = useLocalStorage(
+    user ? `ce-orders-${user.uid}` : null,
+    []
+  )
+
   const [favourites, setFavourites] = useLocalStorage(
-    'campuseats-favourites',
+    user ? `ce-favs-${user.uid}` : null,
     []
   )
 
@@ -58,14 +69,20 @@ export default function CartProvider({ children }) {
   }
 
   function toggleFavourite(itemId, vendorId) {
+    if (!user) return
+
     setFavourites((previous) => {
       const existing = previous.find(
-        (item) => item.itemId === itemId
+        (item) =>
+          item.itemId === itemId &&
+          item.vendorId === vendorId
       )
 
       if (existing) {
         return previous.filter(
-          (item) => item.itemId !== itemId
+          (item) =>
+            !(item.itemId === itemId &&
+              item.vendorId === vendorId)
         )
       }
 
@@ -74,7 +91,7 @@ export default function CartProvider({ children }) {
   }
 
   function placeOrder(details) {
-    if (cart.length === 0) return
+    if (!user || cart.length === 0) return
 
     const order = {
       id: Date.now().toString(),
@@ -99,7 +116,7 @@ export default function CartProvider({ children }) {
     changeQty,
     removeFromCart,
     placeOrder,
-  }), [cart, orders, count, total, favourites])
+  }), [cart, orders, count, total, favourites, user])
 
   return (
     <CartContext.Provider value={value}>
