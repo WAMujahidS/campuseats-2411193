@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthProvider.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import SeedPage from './pages/SeedPage.jsx'
 
 
 //
@@ -32,6 +33,9 @@ function App() {
                 <Route path="orders" element={<OrdersPage />} />
                 <Route path="favourites" element={<FavouritePage />} />
               </Route>
+              {import.meta.env.DEV && (
+                <Route path="seed" element={<SeedPage />} />
+              )}
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

@@ -1,41 +1,56 @@
 
-import { useParams } from 'react-router'
-import { Loading, ErrorMessage } from '../components/Status.jsx'
+import { Link, useParams } from 'react-router'
+import { useVendor } from '../hooks/useVendor.js'
 import MenuList from '../components/MenuList.jsx'
-import { useVendors } from '../hooks/useVendors.js'
+import { Loading, ErrorMessage } from '../components/Status.jsx'
 
 function VendorPage() {
   const { id } = useParams()
-  const { vendors, loading, error, reload } = useVendors()
 
-  if (loading) {
-    return <Loading />
-  }
+  // Get one vendor and its menu from Firestore
+  const { vendor, menu, loading, error } = useVendor(id)
+
+  if (loading) return <Loading />
 
   if (error) {
-    return <ErrorMessage message={error} onRetry={reload} />
-  }
-
-  // Find the vendor that matches the ID in the URL.
-  const vendor = vendors.find((v) => v.id === id)
-
-  // Show a message if the vendor does not exist.
-  if (!vendor) {
     return (
-      <section className="card">
-        <h2>Vendor not found</h2>
-        <p>No vendor matches this ID.</p>
-      </section>
+      <ErrorMessage
+        message={error}
+        onRetry={() => window.location.reload()}
+      />
     )
   }
 
+  if (!vendor) {
+    return (
+      <p>
+        Vendor not found. <Link to="/">Back to vendors</Link>
+      </p>
+    )
+  }
+
+  // Add vendor information to each menu item.
+  // This is needed later when placing orders.
+  const items = menu.map((item) => ({
+    ...item,
+    vendorId: vendor.id,
+    vendorName: vendor.name,
+  }))
+
   return (
     <section>
-      <h2 className="section-title">Menu: {vendor.name}</h2>
+      <p>
+        <Link to="/">← All vendors</Link>
+      </p>
 
-      <p className="muted">{vendor.location}</p>
+      <h2 className="section-title">{vendor.name}</h2>
 
-      <MenuList items={vendor.menu ?? []} vendorId={vendor.id} />
+      <p className="muted">
+        {vendor.location} · {vendor.openHours}
+      </p>
+
+      {/* Keep vendorId for the Favourite feature */}
+      <MenuList items={items} vendorId={vendor.id} />
     </section>
   )
 }

@@ -700,3 +700,17 @@ select:focus-visible {
   outline: 2px solid #e8a33d;
   outline-offset: 3px;
 }
+
+
+/* Week 6: Order actions */
+.order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+
+.order-actions input {
+  width: auto;
+}

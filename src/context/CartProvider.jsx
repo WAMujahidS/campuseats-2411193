@@ -1,26 +1,45 @@
 
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CartContext } from './cart-context.js'
 import { useLocalStorage } from '../hooks/useLocalStorage.js'
 import { useAuth } from '../hooks/useAuth.js'
 
+import {
+  subscribeToFavourites,
+  toggleFavouriteInFirestore,
+} from '../services/favourites.js'
+
 export default function CartProvider({ children }) {
   const { user } = useAuth()
 
+  // Keep the cart in localStorage for each user.
   const [cart, setCart] = useLocalStorage(
     user ? `ce-cart-${user.uid}` : null,
     []
   )
 
-  const [orders, setOrders] = useLocalStorage(
-    user ? `ce-orders-${user.uid}` : null,
-    []
-  )
+  // Favourites are now stored in Firestore.
+  const [favourites, setFavourites] = useState([])
+  const [favouritesError, setFavouritesError] = useState(null)
 
-  const [favourites, setFavourites] = useLocalStorage(
-    user ? `ce-favs-${user.uid}` : null,
-    []
-  )
+  // Listen to favourites in real time.
+  useEffect(() => {
+    if (!user) {
+      setFavourites([])
+      setFavouritesError(null)
+      return
+    }
+
+    setFavouritesError(null)
+
+    const unsubscribe = subscribeToFavourites(
+      user.uid,
+      setFavourites,
+      (err) => setFavouritesError(err.message)
+    )
+
+    return unsubscribe
+  }, [user])
 
   const count = cart.reduce(
     (sum, line) => sum + line.qty,
@@ -68,55 +87,52 @@ export default function CartProvider({ children }) {
     )
   }
 
+  // Add or remove an item from Firestore favourites.
   function toggleFavourite(itemId, vendorId) {
     if (!user) return
 
-    setFavourites((previous) => {
-      const existing = previous.find(
-        (item) =>
-          item.itemId === itemId &&
-          item.vendorId === vendorId
-      )
+    const existing = favourites.some(
+      (item) =>
+        item.itemId === itemId &&
+        item.vendorId === vendorId
+    )
 
-      if (existing) {
-        return previous.filter(
-          (item) =>
-            !(item.itemId === itemId &&
-              item.vendorId === vendorId)
-        )
-      }
+    const favouriteItem = { itemId, vendorId }
 
-      return [...previous, { itemId, vendorId }]
+    toggleFavouriteInFirestore(
+      user.uid,
+      favouriteItem,
+      existing
+    ).catch((err) => {
+      setFavouritesError(err.message)
+      console.error('Favourite update failed:', err)
     })
   }
 
-  function placeOrder(details) {
-    if (!user || cart.length === 0) return
-
-    const order = {
-      id: Date.now().toString(),
-      ...details,
-      items: cart,
-      total,
-      placedAt: new Date().toISOString(),
-    }
-
-    setOrders((previous) => [order, ...previous])
+  // Clear the cart after successfully placing an order.
+  function clearCart() {
     setCart([])
   }
 
   const value = useMemo(() => ({
     cart,
-    orders,
     count,
     total,
     favourites,
+    favouritesError,
     toggleFavourite,
     addToCart,
     changeQty,
     removeFromCart,
-    placeOrder,
-  }), [cart, orders, count, total, favourites, user])
+    clearCart,
+  }), [
+    cart,
+    count,
+    total,
+    favourites,
+    favouritesError,
+    user,
+  ])
 
   return (
     <CartContext.Provider value={value}>

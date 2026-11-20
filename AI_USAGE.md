@@ -20,3 +20,13 @@
 - What I kept, changed or rejected, and why: AI suggest to use react-router-dom
 but I reject it. Also because this lab doesn't have any code I asked the AI to explain each code. AI also suggest to change all of the VendorCard.jsx but I reject it. I only kept the funcion where if the vendor is closed, the cursor cannot click on it.
 - One thing the AI got wrong and how I fixed it: The hooks doesn't work and the AI suggest use react-router-dom. Also because I made the favourite feature in week 3, it doesn't integrate with the hooks.
+## Week 5
+- Tool(s):ChatGPT
+- What I asked for: step by step and explain and help to fix personal feature
+- What I kept, changed or rejected, and why: I kept everything because it follows the lab exactly the same and don't really stucked at the personal features as it only need to put the favourite page into the protected route but I stucked at the favourite button inside the vendor page which user also need to login to view it
+- One thing the AI got wrong and how I fixed it: Some of the suggestions did not fully match my existing code structure. I checked my own code and adjusted it accordingly.
+## Week 6
+- Tool(s):ChatGPT
+- What I asked for: step by step and explain and help to fix personal feature
+- What I kept, changed or rejected, and why: Kept the heart button and Favourite page but moved favourite storage from localStorage to Firestore.
+- One thing the AI got wrong and how I fixed it: The AI used outdated menu structure. I fixed it by retrieving menu items from Firestore.
